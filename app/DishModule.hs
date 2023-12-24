@@ -8,7 +8,7 @@ import GHC.Generics
 import qualified Data.ByteString.Lazy as B
 import qualified Data.ByteString.Lazy.UTF8 as BSLU
 import Data.Char (toLower)
-import Data.List (isInfixOf, sortOn)
+import Data.List (isInfixOf, sortOn, find)
 import CategoryModule
 
 data MenuItem = MenuItem
@@ -54,6 +54,9 @@ searchDishesByName query menuItems =
 
 sortDishesBy :: Ord b => (MenuItem -> b) -> [MenuItem] -> [MenuItem]
 sortDishesBy extractor = sortOn extractor
+
+getDish :: Int -> [MenuItem] -> Maybe MenuItem
+getDish targetId menuItems = find (\dish -> DishModule.id dish == targetId) menuItems
 
 
 --searchDishesByName :: String -> IO [MenuItem]
