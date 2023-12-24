@@ -44,7 +44,9 @@ executable cafe-exe
   main-is: Main.hs
   other-modules:
       CategoryModule
+      DishesIngredientsModule
       DishModule
+      IngredientsModule
       MenuInterface
       Paths_cafe
   autogen-modules:

@@ -4,7 +4,7 @@
 module Main where
 
 import GHC.Generics
-
+import System.Exit (exitSuccess)
 import MenuInterface
 
 main :: IO ()
@@ -29,6 +29,7 @@ main = do
       putStrLn("Реализация второго действия")
     "3" -> do
       putStrLn "Выход из программы"
+      exitSuccess
     _ -> do
       putStrLn "Некорректный выбор"
       main

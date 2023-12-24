@@ -5,6 +5,9 @@ module MenuInterface where
 
 import DishModule
 import CategoryModule
+import IngredientsModule
+import DishesIngredientsModule
+
 import Text.Read
 import Control.Monad (when)
 
@@ -76,16 +79,62 @@ sortingDishesByParams back = do
       putStrLn "Некорректный выбор"
       sortingDishesByParams back
 
+selectConjunctionOrDisjunction :: [Int] -> IO ()
+selectConjunctionOrDisjunction ingrIds = do
+  putStrLn "Выберите конъюнкция или дизъюнкция:\n1 - конъюнкция\n2 - дизъюнкция"
+  params <- getLine
+  menuItems <- getDishes
+  putStrLn "\n"
+  case params of
+    "1" -> do
+       dishesIngredients <- getDishesIngredients
+       let dishes = getDishesConjunction dishesIngredients ingrIds menuItems
+       printDishNames dishes
+    "2" -> do
+      dishesIngredients <- getDishesIngredients
+      let dishes = getDishesDisjunction dishesIngredients ingrIds menuItems
+      printDishNames dishes
+    _ -> do
+      selectConjunctionOrDisjunction ingrIds
 
+getDishesByComponents :: IO () -> IO ()
+getDishesByComponents back = do
+  ingredientItems <- getIngredients
+  putStrLn "\n"
+  printIngredients ingredientItems
+  putStrLn "\nВыберите компоненты (впишите id компонентов через запятую 1,2,3...)"
+  input <- getLine
+  case parseInput input of
+    Just numbers -> do
+      putStrLn $ "Введённые числа: " ++ show numbers
+      selectConjunctionOrDisjunction numbers
+    Nothing      -> do
+      putStrLn "Ошибка ввода. Пожалуйста, введите числа, разделённые запятой."
+      getDishesByComponents back
+
+  optionsViewingDishes back
+--  categoryChoice <- getLine
+--  case readMaybe categoryChoice of
+--    Just number -> do
+--      menuItems <- getDishes
+--      let filteredMenuItems = getDishesByCategoryId number menuItems
+--      printDishNames filteredMenuItems
+--      when (length filteredMenuItems == 0) $ do
+--         putStrLn "\nНет блюд у указанной категории"
+--      optionsViewingDishes back
+--    Nothing -> do
+--      putStrLn "Некорректный ввод. Введите число."
+--      optionShowDishesByCategoryId back
 
 
 optionsViewingDishes :: IO () -> IO ()
 optionsViewingDishes back = do
     putStrLn "\nВыберите вариант просмотра меню:"
     putStrLn "1 - Смотреть все блюда"
-    putStrLn "2 - Смотреть блюда по категориям"  -- Замените это на ваше второе действие
-    putStrLn "3 - Искать блюда по названию"  -- Замените это на ваше второе действие
-    putStrLn "4 - Сортировка блюд по параметрам"  -- Замените это на ваше второе действие
+    putStrLn "2 - Смотреть блюда по категориям"
+    putStrLn "3 - Искать блюда по названию"
+    putStrLn "4 - Сортировка блюд по параметрам"
+    putStrLn "5 - Смотреть блюда по компонентам"
     putStrLn "6 - Назад"
 
     choice <- getLine
@@ -101,6 +150,8 @@ optionsViewingDishes back = do
         searchDishes back
       "4" -> do
         sortingDishesByParams back
+      "5" -> do
+        getDishesByComponents back
       "6" -> do
         back
       _ -> do
