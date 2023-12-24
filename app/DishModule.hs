@@ -8,8 +8,11 @@ import GHC.Generics
 import qualified Data.ByteString.Lazy as B
 import qualified Data.ByteString.Lazy.UTF8 as BSLU
 import Data.Char (toLower)
-import Data.List (isInfixOf, sortOn, find)
-import CategoryModule
+import Data.List (isInfixOf, sortOn, find, intercalate)
+
+--import CategoryModule
+--import DishesIngredientsModule
+--import IngredientsModule
 
 data MenuItem = MenuItem
   { id :: Int
@@ -24,15 +27,23 @@ instance FromJSON MenuItem
 
 -- ++ show (getCategories DishModule.category_id dish categories) ++ "\n"
 
-printDishNames :: [MenuItem] -> IO ()
-printDishNames menuItems = do
-  categories <- getCategories
-  mapM_ (\(dish) -> putStrLn $ "id - " ++ show (DishModule.id dish) ++
-    "\nНазвание - " ++ DishModule.name dish ++
-    "\nЦена - " ++ show (DishModule.price dish) ++
-    "\nКол-во грамм - " ++ show(DishModule.grams dish) ++
-    "\nКол-во калорий - " ++ show (DishModule.calories dish) ++
-    "\nКатегория - " ++ maybe "Неизвестная категория" CategoryModule.name (getCategoryById (DishModule.category_id dish) categories) ++"\n") menuItems
+--ingredientNamesByIds :: [Int] -> [IngredientItem] -> String
+--ingredientNamesByIds ids ingredientList =
+--  let matchingIngredients = filter (\ingredient -> IngredientsModule.id ingredient `elem` ids) ingredientList
+--  in intercalate ", " (map IngredientsModule.name matchingIngredients)
+--
+--printDishNames :: [MenuItem] -> IO ()
+--printDishNames menuItems = do
+--  categories <- getCategories
+--  dishesIngredients <- getDishesIngredients
+--  ingredients <- getIngredients
+--  mapM_ (\(dish) -> putStrLn $ "id - " ++ show (DishModule.id dish) ++
+--    "\nНазвание - " ++ DishModule.name dish ++
+--    "\nЦена - " ++ show (DishModule.price dish) ++
+--    "\nКол-во грамм - " ++ show(DishModule.grams dish) ++
+--    "\nКол-во калорий - " ++ show (DishModule.calories dish) ++
+--    "\nКатегория - " ++ maybe "Неизвестная категория" CategoryModule.name (getCategoryById (DishModule.category_id dish) categories) ++
+--    "\n - " ++ ingredientNamesByIds (getIngredientIds dishesIngredients dish) ingredients) menuItems
 
 getDishes :: IO [MenuItem]
 getDishes = do

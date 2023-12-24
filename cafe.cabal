@@ -52,6 +52,7 @@ executable cafe-exe
       DishModule
       IngredientsModule
       MenuInterface
+      PrintDishNames
       Paths_cafe
   autogen-modules:
       Paths_cafe

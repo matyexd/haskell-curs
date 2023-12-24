@@ -7,6 +7,7 @@ import DishModule
 import CategoryModule
 import IngredientsModule
 import DishesIngredientsModule
+import PrintDishNames
 
 import Text.Read
 import Control.Monad (when)
@@ -105,24 +106,10 @@ getDishesByComponents = do
   input <- getLine
   case parseInput input of
     Just numbers -> do
-      putStrLn $ "Введённые числа: " ++ show numbers
       selectConjunctionOrDisjunction numbers
     Nothing      -> do
       putStrLn "Ошибка ввода. Пожалуйста, введите числа, разделённые запятой."
       getDishesByComponents
-
---  categoryChoice <- getLine
---  case readMaybe categoryChoice of
---    Just number -> do
---      menuItems <- getDishes
---      let filteredMenuItems = getDishesByCategoryId number menuItems
---      printDishNames filteredMenuItems
---      when (length filteredMenuItems == 0) $ do
---         putStrLn "\nНет блюд у указанной категории"
---      optionsViewingDishes back
---    Nothing -> do
---      putStrLn "Некорректный ввод. Введите число."
---      optionShowDishesByCategoryId back
 
 
 optionsViewingDishes :: Bool -> IO ()
