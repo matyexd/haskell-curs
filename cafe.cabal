@@ -43,6 +43,7 @@ library
 executable cafe-exe
   main-is: Main.hs
   other-modules:
+      BanquetsInterface
       CategoryModule
       DishesIngredientsModule
       DishModule

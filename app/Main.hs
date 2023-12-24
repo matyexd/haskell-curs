@@ -33,3 +33,4 @@ main = do
     _ -> do
       putStrLn "Некорректный выбор"
       main
+  main

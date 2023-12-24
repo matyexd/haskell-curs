@@ -127,8 +127,19 @@ getDishesByComponents back = do
 --      optionShowDishesByCategoryId back
 
 
-optionsViewingDishes :: IO () -> IO ()
-optionsViewingDishes back = do
+optionsViewingDishes :: Bool -> IO ()
+optionsViewingDishes shouldContinue = do
+
+    putStrLn "Это бесконечная рекурсия"
+    if shouldContinue
+        then do
+          putStrLn "Хотите продолжить? (y/n)"
+          response <- getLine
+          if response == "y"
+            then infiniteLoop True
+            else putStrLn "Выход из бесконечной рекурсии"
+        else putStrLn "Выход из бесконечной рекурсии"
+
     putStrLn "\nВыберите вариант просмотра меню:"
     putStrLn "1 - Смотреть все блюда"
     putStrLn "2 - Смотреть блюда по категориям"
@@ -146,14 +157,18 @@ optionsViewingDishes back = do
         optionsViewingDishes back
       "2" -> do
         optionShowDishesByCategoryId back
+        optionsViewingDishes back
       "3" -> do
         searchDishes back
+        optionsViewingDishes back
       "4" -> do
         sortingDishesByParams back
+        optionsViewingDishes back
       "5" -> do
         getDishesByComponents back
+        optionsViewingDishes back
       "6" -> do
-        back
+        putStrLn "Назад"
       _ -> do
         putStrLn "Некорректный выбор"
         optionsViewingDishes back
