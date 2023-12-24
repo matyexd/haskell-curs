@@ -5,32 +5,27 @@ module Main where
 
 import GHC.Generics
 import System.Exit (exitSuccess)
+
 import MenuInterface
+import BanquetsInterface
 
 main :: IO ()
 main = do
   putStrLn "Выберите действие:"
   putStrLn "1 - Смотреть меню"
-  putStrLn "2 - Смотреть что-то еще"  -- Замените это на ваше второе действие
+  putStrLn "2 - Бронирование банкета"
   putStrLn "3 - Выход из программы"
 
-  choice <- getLine  -- Получаем ввод пользователя
+  choice <- getLine
 
-  -- Загрузить содержимое файла
---  menuItems <- getDishes
---  printDishNames menuItems
---
---  categoryItems <- getCategories
---  printCategoryNames categoryItems
   case choice of
     "1" -> do
-      optionsViewingDishes(main)
+      optionsViewingDishes True
     "2" -> do
-      putStrLn("Реализация второго действия")
+      optionsBookBanquet
     "3" -> do
       putStrLn "Выход из программы"
       exitSuccess
     _ -> do
       putStrLn "Некорректный выбор"
-      main
   main

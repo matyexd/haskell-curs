@@ -11,8 +11,8 @@ import DishesIngredientsModule
 import Text.Read
 import Control.Monad (when)
 
-optionShowDishesByCategoryId :: IO () -> IO ()
-optionShowDishesByCategoryId back = do
+optionShowDishesByCategoryId :: IO ()
+optionShowDishesByCategoryId = do
   categoryItems <- getCategories
   putStrLn "\n"
   printCategoryNames categoryItems
@@ -25,13 +25,13 @@ optionShowDishesByCategoryId back = do
       printDishNames filteredMenuItems
       when (length filteredMenuItems == 0) $ do
          putStrLn "\nНет блюд у указанной категории"
-      optionsViewingDishes back
+
     Nothing -> do
       putStrLn "Некорректный ввод. Введите число."
-      optionShowDishesByCategoryId back
+      optionShowDishesByCategoryId
 
-searchDishes :: IO () -> IO ()
-searchDishes back = do
+searchDishes :: IO ()
+searchDishes = do
   putStrLn "\nВведите текст:"
   searchValue <- getLine
   menuItems <- getDishes
@@ -39,10 +39,10 @@ searchDishes back = do
   printDishNames items
   when (length items == 0) $ do
      putStrLn "\nНет блюд с указанным названием"
-  optionsViewingDishes back
 
-sortingDishesByParams :: IO () -> IO ()
-sortingDishesByParams back = do
+
+sortingDishesByParams :: IO ()
+sortingDishesByParams = do
   putStrLn "Впишите id параметра по которому необходимо сортировать:"
   putStrLn "id - 1"
   putStrLn "Название - 2"
@@ -58,26 +58,25 @@ sortingDishesByParams back = do
     "1" -> do
       let items = sortDishesBy (DishModule.id) menuItems
       printDishNames items
-      optionsViewingDishes back
+
     "2" -> do
       let items = sortDishesBy (DishModule.name) menuItems
       printDishNames items
-      optionsViewingDishes back
+
     "3" -> do
       let items = sortDishesBy (DishModule.price) menuItems
       printDishNames items
-      optionsViewingDishes back
+
     "4" -> do
       let items = sortDishesBy (DishModule.grams) menuItems
       printDishNames items
-      optionsViewingDishes back
+
     "5" -> do
       let items = sortDishesBy (DishModule.calories) menuItems
       printDishNames items
-      optionsViewingDishes back
     _ -> do
       putStrLn "Некорректный выбор"
-      sortingDishesByParams back
+      sortingDishesByParams
 
 selectConjunctionOrDisjunction :: [Int] -> IO ()
 selectConjunctionOrDisjunction ingrIds = do
@@ -97,8 +96,8 @@ selectConjunctionOrDisjunction ingrIds = do
     _ -> do
       selectConjunctionOrDisjunction ingrIds
 
-getDishesByComponents :: IO () -> IO ()
-getDishesByComponents back = do
+getDishesByComponents :: IO ()
+getDishesByComponents = do
   ingredientItems <- getIngredients
   putStrLn "\n"
   printIngredients ingredientItems
@@ -110,9 +109,8 @@ getDishesByComponents back = do
       selectConjunctionOrDisjunction numbers
     Nothing      -> do
       putStrLn "Ошибка ввода. Пожалуйста, введите числа, разделённые запятой."
-      getDishesByComponents back
+      getDishesByComponents
 
-  optionsViewingDishes back
 --  categoryChoice <- getLine
 --  case readMaybe categoryChoice of
 --    Just number -> do
@@ -130,45 +128,40 @@ getDishesByComponents back = do
 optionsViewingDishes :: Bool -> IO ()
 optionsViewingDishes shouldContinue = do
 
-    putStrLn "Это бесконечная рекурсия"
     if shouldContinue
         then do
-          putStrLn "Хотите продолжить? (y/n)"
-          response <- getLine
-          if response == "y"
-            then infiniteLoop True
-            else putStrLn "Выход из бесконечной рекурсии"
-        else putStrLn "Выход из бесконечной рекурсии"
 
-    putStrLn "\nВыберите вариант просмотра меню:"
-    putStrLn "1 - Смотреть все блюда"
-    putStrLn "2 - Смотреть блюда по категориям"
-    putStrLn "3 - Искать блюда по названию"
-    putStrLn "4 - Сортировка блюд по параметрам"
-    putStrLn "5 - Смотреть блюда по компонентам"
-    putStrLn "6 - Назад"
+          putStrLn "\nВыберите вариант просмотра меню:"
+          putStrLn "1 - Смотреть все блюда"
+          putStrLn "2 - Смотреть блюда по категориям"
+          putStrLn "3 - Искать блюда по названию"
+          putStrLn "4 - Сортировка блюд по параметрам"
+          putStrLn "5 - Смотреть блюда по компонентам"
+          putStrLn "6 - Назад"
 
-    choice <- getLine
+          choice <- getLine
 
-    case choice of
-      "1" -> do
-        menuItems <- getDishes
-        printDishNames menuItems
-        optionsViewingDishes back
-      "2" -> do
-        optionShowDishesByCategoryId back
-        optionsViewingDishes back
-      "3" -> do
-        searchDishes back
-        optionsViewingDishes back
-      "4" -> do
-        sortingDishesByParams back
-        optionsViewingDishes back
-      "5" -> do
-        getDishesByComponents back
-        optionsViewingDishes back
-      "6" -> do
-        putStrLn "Назад"
-      _ -> do
-        putStrLn "Некорректный выбор"
-        optionsViewingDishes back
+          case choice of
+            "1" -> do
+              menuItems <- getDishes
+              printDishNames menuItems
+              optionsViewingDishes True
+            "2" -> do
+              optionShowDishesByCategoryId
+              optionsViewingDishes True
+            "3" -> do
+              searchDishes
+              optionsViewingDishes True
+            "4" -> do
+              sortingDishesByParams
+              optionsViewingDishes True
+            "5" -> do
+              getDishesByComponents
+              optionsViewingDishes True
+            "6" -> do
+              putStrLn "Назад"
+            _ -> do
+              putStrLn "Некорректный выбор"
+              optionsViewingDishes True
+        else putStrLn ""
+
